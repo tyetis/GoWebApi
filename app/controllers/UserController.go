@@ -20,8 +20,23 @@ func NewUserController(service services.IUserService) userController {
 }
 
 func (c *userController) Create(ctx *fiber.Ctx) error {
-	user := c.service.FindOne(&entity.User{})
-	return ctx.JSON(user)
+	var user entity.User
+	ctx.BodyParser(&user)
+
+	return ctx.JSON(utils.Validator(user, func() interface{} {
+		return c.service.Create(&user)
+	}))
+}
+
+func (c *userController) Update(ctx *fiber.Ctx) error {
+	var user entity.User
+	ctx.BodyParser(&user)
+	id, _ := strconv.Atoi(ctx.Params("id"))
+
+	return ctx.JSON(utils.Validator(user, func() interface{} {
+		user.Id = id
+		return c.service.Update(&user)
+	}))
 }
 
 func (c *userController) Index(ctx *fiber.Ctx) error {
@@ -37,6 +52,12 @@ func (c *userController) Index(ctx *fiber.Ctx) error {
 	}, perPage, page)
 
 	return ctx.JSON(users)
+}
+
+func (c *userController) Delete(ctx *fiber.Ctx) error {
+	id, _ := strconv.Atoi(ctx.Params("id"))
+
+	return ctx.JSON(c.service.Delete(id))
 }
 
 func SetSession() {

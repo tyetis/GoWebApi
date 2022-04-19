@@ -22,6 +22,8 @@ func UserRoutes(app *fiber.App) {
 
 	app.Get("/users/:id?", userController.Index)
 	app.Post("/users", userController.Create)
+	app.Delete("/users/:id", userController.Delete)
+	app.Put("/users/:id", userController.Update)
 }
 
 func OrderRoutes(app *fiber.App) {

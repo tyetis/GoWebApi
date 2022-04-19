@@ -6,9 +6,9 @@ import (
 
 type User struct {
 	Id         int
-	Name       string
+	Name       string `validate:"required,min=3,max=32"`
 	Email      string
 	Password   string
-	CreateDate time.Time
+	Createdate time.Time
 	Orders     []Order
 }
